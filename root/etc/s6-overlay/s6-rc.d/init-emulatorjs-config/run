@@ -6,13 +6,13 @@ lsiown abc:abc \
     /data
 
 # ipfs migrate check on startup
-if [[ -d "/data/.ipfs" ]]; then
+if [[ -d "/data/.ipfs" ]] && [[ ! -z ${DISABLE_IPFS+x} ]]; then
     echo "[ipfs-upgrade] Checking if fs-repo needs to be upgraded (this may take some time)"
     HOME=/data s6-setuidgid abc /usr/bin/fs-repo-migrations -y -to 15
 fi
 
 # ipfs config
-if [[ ! -d "/data/.ipfs" ]]; then
+if [[ ! -d "/data/.ipfs" ]] && [[ ! -z ${DISABLE_IPFS+x} ]]; then
     HOME=/data ipfs init --profile lowpower
     lsiown -R abc:abc /data/.ipfs
 fi
